@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance-Calculator</title>
+    <link rel="shortcut icon" href="icons8-calculator-16.png" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #ecf0f1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #121212;
+        }
+        .calculator {
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #3498db;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #bdc3c7;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #333;
+            color: #ecf0f1;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #2c3e50;
+            border-radius: 4px;
+            border-left: 5px solid #3498db;
+            text-align: center;
+        }
+        .current-attendance {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 18px;
+        }
+        .solution {
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        footer {
+            margin-top: 30px;
+            padding: 20px 0;
+            text-align: center;
+            background-color: #1e1e1e;
+            color: #bdc3c7;
+            border-top: 2px solid #3498db;
+        }
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>Attendance Calculator</h1>
+        
+        <div class="input-group">
+            <label for="present">Number of Classes Attended:</label>
+            <input type="number" id="present" min="0" value="0">
+        </div>
+        
+        <div class="input-group">
+            <label for="total">Total Number of Classes:</label>
+            <input type="number" id="total" min="1" value="">
+        </div>
+        
+        <div class="input-group">
+            <label for="target">Target Attendance Percentage (%):</label>
+            <input type="number" id="target" min="1" max="100" value="">
+        </div>
+        
+        <button onclick="calculateAttendance()">Calculate</button>
+        
+        <div id="result" class="result">
+            <p>Current attendance: <span id="currentPercentage" class="current-attendance">0%</span></p>
+            <p id="targetMessage"></p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>MADE BY <a href="https://github.com/shaikfazal-del" target="_blank">Fazal</a></p>
+    </footer>
+
+    <script>
+        function calculateAttendance() {
+            const present = parseFloat(document.getElementById('present').value);
+            const total = parseFloat(document.getElementById('total').value);
+            const targetPercentage = parseFloat(document.getElementById('target').value);
+            
+            if (present < 0 || total <= 0 || targetPercentage <= 0 || targetPercentage > 100 || present > total) {
+                alert("Please enter valid values. Present classes cannot exceed total classes.");
+                return;
+            }
+            
+            const currentPercentage = (present / total) * 100;
+            document.getElementById('currentPercentage').textContent = currentPercentage.toFixed(2) + '%';
+            
+            if (currentPercentage >= targetPercentage) {
+                document.getElementById('targetMessage').innerHTML = 
+                    `Your current attendance already meets your target of ${targetPercentage}%.`;
+                return;
+            }
+            
+            if (targetPercentage === 100) {
+                document.getElementById('targetMessage').innerHTML = 
+                    `It's impossible to achieve 100% attendance if any classes were missed.`;
+                return;
+            }
+            
+            const targetDecimal = targetPercentage / 100;
+            const additionalClassesExact = ((targetDecimal * total) - present) / (1 - targetDecimal);
+            const additionalClasses = Math.ceil(additionalClassesExact);
+            
+            document.getElementById('targetMessage').innerHTML = 
+                `To reach ${targetPercentage}% attendance, you need to attend <span class="solution">${additionalClasses} more class(es)</span>`;
+        }
+        window.onload = calculateAttendance;
+    </script>
+</body>
+</html>
