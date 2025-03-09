@@ -69,7 +69,6 @@
         }
         .current-attendance {
             font-weight: bold;
-            color: #e74c3c;
             font-size: 18px;
         }
         .solution {
@@ -138,7 +137,16 @@
             }
             
             const currentPercentage = (present / total) * 100;
-            document.getElementById('currentPercentage').textContent = currentPercentage.toFixed(2) + '%';
+            const currentPercentageElement = document.getElementById('currentPercentage');
+            currentPercentageElement.textContent = currentPercentage.toFixed(2) + '%';
+            
+            if (currentPercentage >= 75) {
+                currentPercentageElement.style.color = '#27ae60'; // Green
+            } else if (currentPercentage >= 65) {
+                currentPercentageElement.style.color = '#f39c12'; // Yellow
+            } else {
+                currentPercentageElement.style.color = '#e74c3c'; // Red
+            }
             
             if (currentPercentage >= targetPercentage) {
                 document.getElementById('targetMessage').innerHTML = 
